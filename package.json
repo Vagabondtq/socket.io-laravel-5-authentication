@@ -1,0 +1,28 @@
+{
+  "name": "socketio_laravel_5_auth",
+  "version": "0.0.1",
+  "main": "server.js",
+  "author": "Kiril Calkin <hello@nonamez.name>",
+  "dependencies": {
+    "mcrypt": ">=0.1.*",
+    "php-unserialize": "latest",
+    "redis": "latest",
+    "socket.io": ">=1.4.*"
+  },
+  "description": "Dependencies needed to authenticate Laravel session in Socket.IO",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nonamez/blog.git"
+  },
+  "keywords": [
+    "Laravel",
+    "Socket.IO",
+    "Authentication",
+    "Session"
+  ],
+  "license": "Beerware",
+  "bugs": {
+    "url": "https://github.com/nonamez/blog/issues"
+  },
+  "homepage": "http://nonamez.name/en/post/socketio_client_authentication_using_laravel_session_data"
+}
