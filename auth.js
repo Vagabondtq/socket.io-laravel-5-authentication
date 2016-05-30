@@ -21,9 +21,9 @@ let io = require('socket.io').listen(server)
 // Check Laravel AUTH
 io.use(function (socket, next) {
 	if (socket.handshake.query.hasOwnProperty('laravel_session_cookie')) {
-		let laravel_session = socket.handshake.query.laravel_session_cookie
+		let laravel_session_cookie = socket.handshake.query.laravel_session_cookie
 
-		let session_id = helpers.laravel_session.getSessionId(laravel_session, config.secret_key);
+		let session_id = helpers.laravel_session.getSessionId(laravel_session_cookie, config.secret_key);
 
 		if (session_id == false) {
 			console.log('Cookie is invalid')
@@ -34,9 +34,6 @@ io.use(function (socket, next) {
 		logger.info('Session ID successfully decoded from cookie')
 
 		helpers.laravel_session.getSession(session_id).then(function(session) {
-			// Generating user key
-			let user_key = config.auth_name + crypto.createHash('sha1').update(config.auth_class).digest('hex')
-
 			if (config.env == 'development') {
 				console.log('Session: ', session)
 				console.log('CSRF Token: ', socket.handshake.query.csrf_token)
@@ -44,13 +41,17 @@ io.use(function (socket, next) {
 			}
 
 			// CSRF check
-			if (session._token !== socket.handshake.query.csrf_token) {
+			if (session.hasOwnProperty('_token') && session._token !== socket.handshake.query.csrf_token) {
 				let message = 'CSRF token is invalid'
 
 				console.log(message)
 
 				return next(message, false)
 			}
+
+			// Generating user key
+			let user_key = config.auth_name + crypto.createHash('sha1').update(config.auth_class).digest('hex')
+
 			// Checking if user id is presented in session
 			if (session !== null && session.hasOwnProperty(user_key)) {
 				// Here you need to get user from db
